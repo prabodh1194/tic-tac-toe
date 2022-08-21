@@ -13,9 +13,9 @@ const winnerComb = [
     [2, 4, 6]
 ]
 
-const Square = ({value, onClick}) => {
+const Square = ({value, onClick, highlight}) => {
     return (
-        <div className='square' onClick={onClick}>
+        <div className={`square ${highlight ? 'highlight': null}`} onClick={onClick}>
             {value}
         </div>
     );
@@ -26,12 +26,14 @@ const Board = (props) => {
     const [xIsNext, updateX] = useState(true);
     const [winner, setWinner] = useState(false);
     const [khichdi, setKhichdi] = useState(false);
+    const [highlight, setHighlight] = useState(new Set());
 
     useEffect(() => {
         for (let comb of winnerComb) {
             const [a, b, c] = comb;
             if (square[a] && square[a] === square[b] && square[a] === square[c]) {
                 setWinner(square[a]);
+                setHighlight(new Set(Object.values({a, b, c})));
             }
         }
 
@@ -65,6 +67,7 @@ const Board = (props) => {
                     value={square[k]} 
                     onClick={() => handleClick(k)}
                     key={k + square[k]}
+                    highlight={highlight.has(k)}
                 />
             );
         }
